@@ -5,7 +5,7 @@ Nov-Dec 2020
 Explore US Bikeshare Data
 
 ### Description
-Describe what your project is about and what it does
+Generates statistical reports on user types and journeys taken through bikeshares in three US cities. Allows filters by month and day of the week. Reports on journey time and duration, popular start and end points, user gender and year of birth.
 
 ### Files used
 Include the files used
