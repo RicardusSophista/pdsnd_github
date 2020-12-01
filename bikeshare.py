@@ -19,17 +19,14 @@ def get_filters():
         (str) day - name of the day of week to filter by, or "all" to apply no day filter
     """
     print('Hello! Let\'s explore some US bikeshare data!')
-    # TO DO: get user input for city (chicago, new york city, washington). HINT: Use a while loop to handle invalid inputs
     city = u.get_input('Choose a city from the following options: Chicago, New York City, Washington.',
                     ['Chicago','New York City','Washington']).lower()
 
 
-    # TO DO: get user input for month (all, january, february, ... , june)
     month = u.get_input('Choose a month from between January to June to view statistics for a specific month,\nor input \'all\' to view statistics for all months',
                       ['January','February','March','April','May','June','All']).title()
 
 
-    # TO DO: get user input for day of week (all, monday, tuesday, ... sunday)
     day = u.get_input('Choose a day of the week to view statistics for a specific day,\nor input \'all\' to view statistics for all months',
                    ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday','All']).title()
 
@@ -74,14 +71,11 @@ def time_stats(df):
     print('\nCalculating The Most Frequent Times of Travel...\n')
     start_time = time.time()
 
-    # TO DO: display the most common month
     print(u.mode_text('month to travel',df['month'].mode()))
 
-    # TO DO: display the most common day of week
     print(u.mode_text('day of the week to travel',df['day_of_week'].mode()))
 
 
-    # TO DO: display the most common start hour
     raw_mode = df['hour'].mode()
     format_mode = [str(m).rjust(2,'0') + ':00 - ' + str(m).rjust(2,'0') + ':59' for m in raw_mode]
     print(u.mode_text('hour of the day to start a trip',format_mode))
@@ -97,16 +91,13 @@ def station_stats(df):
     print('\nCalculating The Most Popular Stations and Trip...\n')
     start_time = time.time()
 
-    # TO DO display most commonly used start station
     print(u.mode_text('start station',df['Start Station'].mode()))
 
 
 
-    # TO DO: display most commonly used end station
     print(u.mode_text('end station',df['End Station'].mode()))
 
 
-    # TO DO: display most frequent combination of start station and end station trip
     print(u.mode_text('trip',df['trip'].mode()))
 
 
@@ -121,13 +112,10 @@ def trip_duration_stats(df):
     print('\nCalculating Trip Duration...\n')
     start_time = time.time()
 
-    # TO DO: display total travel time
     tot = u.format_time(dt.timedelta(seconds=float(df['Trip Duration'].sum())))
-    # **** LEARN DIFFERENCE BETWEEN DATESTAMP AND TIMEDELTA
     print('Total travel time is ',tot)
 
 
-    # TO DO: display mean travel time
     mn = u.format_time(dt.timedelta(seconds=float(df['Trip Duration'].mean())))
     print('Mean travel time is ',mn)
 
@@ -146,7 +134,6 @@ def user_stats(df):
     print('\nCalculating User Stats...\n')
     start_time = time.time()
 
-    # TO DO: Display counts of user types
     print('User types are broken down as follows:')
     print(u.table_builder(['User Type', 'Count'],df['User Type'].value_counts().to_dict()))
 
@@ -159,18 +146,15 @@ def user_stats(df):
     df['Birth Year'] = df['Birth Year'].fillna(0).apply(lambda x: int(x))
 
 
-    # TO DO: Display counts of gender
     print('\n\nThe gender of users is divided as follows:')
     print(u.table_builder(['Gender','Count'],df['Gender'].value_counts().to_dict()))
     print("\nThis took %s seconds." % (time.time() - start_time))
 
     input('\nPress ENTER to continue.')
 
-    # TO DO: Display earliest, most recent, and most common year of birth
     """Preliminary investigation shows a number of improbable dates in the data, e.g. 19th century,
     or last few years. A sane_df is created, initially to remove null values (that were replaced with
     zero in a previous step), and then to allow the user to filter out unlikely values."""
-
 
     sane_df = df[df['Birth Year']>0]
 
