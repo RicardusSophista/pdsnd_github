@@ -51,20 +51,20 @@ def load_data(city, month, day):
     """
     df = pd.read_csv(CITY_DATA[city])
     df['Start Time'] = pd.to_datetime(df['Start Time'])
-    
-    df['month'] = df['Start Time'].dt.month_name() 
+
+    df['month'] = df['Start Time'].dt.month_name()
     df['day_of_week'] = df['Start Time'].dt.weekday_name
     df['hour'] = df['Start Time'].dt.hour
-    
+
     df['trip'] = df['Start Station'] + ' to ' + df['End Station']
-    
-    
+
+
     if month != 'All':
         df = df[df['month']==month]
-    
+
     if day != 'All':
         df = df[df['day_of_week']==day.title()]
-    
+
     return df
 
 
@@ -82,7 +82,7 @@ def time_stats(df):
 
 
     # TO DO: display the most common start hour
-    raw_mode = df['hour'].mode()                                                                                
+    raw_mode = df['hour'].mode()
     format_mode = [str(m).rjust(2,'0') + ':00 - ' + str(m).rjust(2,'0') + ':59' for m in raw_mode]
     print(u.mode_text('hour of the day to start a trip',format_mode))
 
@@ -99,7 +99,7 @@ def station_stats(df):
 
     # TO DO display most commonly used start station
     print(u.mode_text('start station',df['Start Station'].mode()))
-   
+
 
 
     # TO DO: display most commonly used end station
@@ -114,7 +114,7 @@ def station_stats(df):
     input("Press ENTER to continue.")
     print('-'*40)
 
-    
+
 def trip_duration_stats(df):
     """Displays statistics on the total and average trip duration."""
 
@@ -136,13 +136,13 @@ def trip_duration_stats(df):
     input('Press ENTER to continue.')
     print('-'*40)
 
-    
+
 
 
 def user_stats(df):
     """Displays statistics on bikeshare users."""
-    
-    
+
+
     print('\nCalculating User Stats...\n')
     start_time = time.time()
 
@@ -154,21 +154,21 @@ def user_stats(df):
     if all(c in cols for c in ['Gender','Birth Year']) == False:
         print('Unfortunately, this dataset does not contain information about gender or age.')
         return
-    
+
     df['Gender'].fillna('Not specified', inplace=True)
     df['Birth Year'] = df['Birth Year'].fillna(0).apply(lambda x: int(x))
 
-    
+
     # TO DO: Display counts of gender
     print('\n\nThe gender of users is divided as follows:')
     print(u.table_builder(['Gender','Count'],df['Gender'].value_counts().to_dict()))
     print("\nThis took %s seconds." % (time.time() - start_time))
-    
+
     input('\nPress ENTER to continue.')
-    
+
     # TO DO: Display earliest, most recent, and most common year of birth
     sane_df = df[df['Birth Year']>0]
-    
+
     earliest = sane_df['Birth Year'].min()
     print('The earliest year of birth is {}.'.format(earliest))
     sanity = u.get_input('Does this value make sense Y/N?',['Y','N']).upper()
@@ -177,7 +177,7 @@ def user_stats(df):
         sane_df = sane_df[sane_df['Birth Year']>=guess]
         earliest = sane_df['Birth Year'].min()
         print('The earliest birth year in the data is ',earliest)
-    
+
     latest = df['Birth Year'].max()
     print('The most recent year of birth is {}.'.format(latest))
     sanity = u.get_input('Does this value make sense Y/N?',['Y','N']).upper()
@@ -188,17 +188,17 @@ def user_stats(df):
         print('The most recent plausible birth year is ',latest)
 
     print(u.mode_text('year of birth',sane_df['Birth Year'].mode()))
-    
+
     input("Press ENTER to continue.")
-    
+
     print('Calculating average trip duration by year of birth.')
-    
+
     bin_list = np.arange(earliest, latest+10, 10)
     bin_labels = [str(x) + ' - ' + str(x+9) for x in bin_list[:-1]]
     t_by_y = sane_df.groupby(pd.cut(sane_df['Birth Year'],bins=bin_list, labels=bin_labels))['Trip Duration'].mean().apply(lambda x: u.format_time(dt.timedelta(seconds=x)))
-        
+
     print(u.table_builder(['Birth Year','Average Trip Duration'],t_by_y.to_dict()))
-    
+
     print('-'*40)
 
 def raw_data(raw):
@@ -214,13 +214,14 @@ def raw_data(raw):
                 print('There are no further rows to display')
                 break
         c = u.get_input('Continue Y/N?',['Y','N'])
-        
-   
+
+
 def main():
-    while True:
+    go = 'Y'
+    while go == 'Y':
         city, month, day = get_filters()
         df = load_data(city, month, day)
-        
+
         cols = df.columns
 
         time_stats(df)
@@ -229,14 +230,12 @@ def main():
         user_stats(df)
         r = u.get_input('Would you like to view the raw data Y/N?',['Y','N'])
         if r == 'Y':
-            raw_df = pd.read_csv(CITY_DATA[city])       
+            raw_df = pd.read_csv(CITY_DATA[city])
             raw_data(raw_df)
+
+        go = u.get_input('\nWould you like to restart Y/N?',['Y','N'])
         
-        restart = u.get_input('\nWould you like to restart Y/N?',['Y','N'])
-        if restart != 'Y':
-            break
 
 
-            
 if __name__ == "__main__":
 	main()
