@@ -222,8 +222,6 @@ def main():
         city, month, day = get_filters()
         df = load_data(city, month, day)
 
-        cols = df.columns
-
         time_stats(df)
         station_stats(df)
         trip_duration_stats(df)
@@ -234,7 +232,7 @@ def main():
             raw_data(raw_df)
 
         go = u.get_input('\nWould you like to restart Y/N?',['Y','N'])
-        
+
 
 
 if __name__ == "__main__":
