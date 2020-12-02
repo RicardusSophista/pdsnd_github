@@ -152,10 +152,7 @@ def user_stats(df):
 
     input('\nPress ENTER to continue.')
 
-    """Preliminary investigation shows a number of improbable dates in the data, e.g. 19th century,
-    or last few years. A sane_df is created, initially to remove null values (that were replaced with
-    zero in a previous step), and then to allow the user to filter out unlikely values."""
-
+    # TO DO: Display earliest, most recent, and most common year of birth
     sane_df = df[df['Birth Year']>0]
 
     earliest = sane_df['Birth Year'].min()
@@ -206,11 +203,10 @@ def raw_data(raw):
 
 
 def main():
-    while True:
+    go = 'Y'
+    while go == 'Y':
         city, month, day = get_filters()
         df = load_data(city, month, day)
-
-        cols = df.columns
 
         time_stats(df)
         station_stats(df)
@@ -221,9 +217,7 @@ def main():
             raw_df = pd.read_csv(CITY_DATA[city])
             raw_data(raw_df)
 
-        restart = u.get_input('\nWould you like to restart Y/N?',['Y','N'])
-        if restart != 'Y':
-            break
+        go = u.get_input('\nWould you like to restart Y/N?',['Y','N'])
 
 
 
